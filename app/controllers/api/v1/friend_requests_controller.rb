@@ -17,6 +17,13 @@ class Api::V1::FriendRequestsController < ApplicationController
     puts "FR: #{friend_request}"
 
     if friend_request.update(friend_request_params)
+      # add to friendships table if status is accepted
+      if friend_request.status = 'accepted'
+        receiver = User.find_by(id: friend_request.receiver_id)
+        requestor = User.find_by(id: friend_request.requestor_id)
+        receiver.friendships << requestor
+        requestor.friendships << receiver
+      end
       render json: FriendRequestSerializer.new(friend_request).serializable_hash.to_json
     else
       render json: { error: friend_request.errors.messages }, status: 422
@@ -27,7 +34,8 @@ class Api::V1::FriendRequestsController < ApplicationController
   private
 
   def friend_request_params
-    params.require(:friend_request).permit(:requestor_id, :receiver_id, :status)
+    params.require(:friend_request).permit(:id, :requestor_id, :receiver_id, 
+      :requestor_name, :receiver_name, :status)
   end
 
 end
