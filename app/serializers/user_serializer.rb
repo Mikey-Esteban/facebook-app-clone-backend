@@ -5,4 +5,6 @@ class UserSerializer
   attribute :created_date do |user|
          user && user.created_at.strftime('%d/%m/%Y')
   end
+
+  has_many :sent_friend_requests, serializer: FriendRequestSerializer
 end
