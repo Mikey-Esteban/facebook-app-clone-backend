@@ -12,7 +12,7 @@ class Api::V1::FriendRequestsController < ApplicationController
   end
 
   def update
-    friend_request = FriendRequest.find_by(id: params[:friend_request][:id])
+    friend_request = FriendRequest.find_by(id: params[:id])
 
     if friend_request.update(friend_request_params)
       # add to friendships table if status is accepted
@@ -28,6 +28,15 @@ class Api::V1::FriendRequestsController < ApplicationController
     end
   end
 
+  def destroy
+    friend_request = FriendRequest.find_by(id: params[:id])
+
+    if friend_request.destroy
+      head :no_content
+    else
+      render json: { error: friend_request.errors.messages }, status: 422
+    end
+  end
 
   private
 
