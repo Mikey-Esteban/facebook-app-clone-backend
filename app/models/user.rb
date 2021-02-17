@@ -6,6 +6,8 @@ class User < ApplicationRecord
 
   has_many :posts, dependent: :destroy
 
+  has_many :notifications, dependent: :destroy
+
   has_many :sent_friend_requests,
     foreign_key: :requestor_id,
     class_name: :FriendRequest,

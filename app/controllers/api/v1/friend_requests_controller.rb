@@ -3,11 +3,15 @@ class Api::V1::FriendRequestsController < ApplicationController
 
   def create
     friend_request = FriendRequest.new(friend_request_params)
+    # create a notification for the receiver
+    requestor = User.find_by(id: friend_request.requestor_id)
+    receiver = User.find_by(id: friend_request.receiver_id)
+    notification = receiver.notifications.new(text: "#{requestor.name} sent you a friend request!")
 
-    if friend_request.save
+    if friend_request.save && notification.save
       render json: FriendRequestSerializer.new(friend_request).serializable_hash.to_json
     else
-      render json: { error: friend_request.errors.messages }, status: 422
+      render json: { error: [friend_request.errors.messages, notification.errors.messages] }, status: 422
     end
   end
 
