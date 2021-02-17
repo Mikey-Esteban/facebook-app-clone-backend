@@ -15,7 +15,6 @@ class Api::V1::PostsController < ApplicationController
 
   def create
     user = User.find_by(id: params[:post][:user_id])
-    puts "User is: #{user.name}"
     post = user.posts.build(post_params)
 
     if post.save
