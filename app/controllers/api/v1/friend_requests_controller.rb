@@ -4,9 +4,7 @@ class Api::V1::FriendRequestsController < ApplicationController
   def create
     friend_request = FriendRequest.new(friend_request_params)
     # create a notification for the receiver
-    requestor = User.find_by(id: friend_request.requestor_id)
-    receiver = User.find_by(id: friend_request.receiver_id)
-    notification = receiver.notifications.new(text: "#{requestor.name} sent you a friend request!")
+    notification = send_notification_to_receiver(friend_request)
 
     if friend_request.save && notification.save
       render json: FriendRequestSerializer.new(friend_request).serializable_hash.to_json
@@ -19,12 +17,9 @@ class Api::V1::FriendRequestsController < ApplicationController
     friend_request = FriendRequest.find_by(id: params[:id])
 
     if friend_request.update(friend_request_params)
-      # add to friendships table if status is accepted
       if friend_request.status = 'accepted'
-        receiver = User.find_by(id: friend_request.receiver_id)
-        requestor = User.find_by(id: friend_request.requestor_id)
-        receiver.friendships << requestor
-        requestor.friendships << receiver
+        # add to friendships table
+        add_friendships(friend_request)
       end
       render json: FriendRequestSerializer.new(friend_request).serializable_hash.to_json
     else
@@ -47,6 +42,29 @@ class Api::V1::FriendRequestsController < ApplicationController
   def friend_request_params
     params.require(:friend_request).permit(:id, :requestor_id, :receiver_id,
       :requestor_name, :receiver_name, :status)
+  end
+
+  def find_receiver(friend_request)
+    receiver = User.find_by(id: friend_request.receiver_id)
+    receiver
+  end
+
+  def find_requestor(friend_request)
+    requestor = User.find_by(id: friend_request.requestor_id)
+    requestor
+  end
+
+  def send_notification_to_receiver(friend_request)
+    requestor = find_requestor(friend_request)
+    receiver = find_receiver(friend_request)
+    notification = receiver.notifications.new(text: "#{requestor.name} sent you a friend request!")
+  end
+
+  def add_friendships(friend_request)
+    requestor = find_requestor(friend_request)
+    receiver = find_receiver(friend_request)
+    receiver.friendships << requestor
+    requestor.friendships << receiver
   end
 
 end
