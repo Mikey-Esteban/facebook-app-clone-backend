@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users, only: [:index, :show] do
-        resources :notifications, only: [:destroy]
+        resources :notifications, only: [:update, :destroy]
       end
       resources :friend_requests, only: [:create, :update, :destroy]
       resources :posts, only: [:index, :show, :create]
