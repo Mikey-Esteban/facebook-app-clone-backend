@@ -17,9 +17,11 @@ class Api::V1::FriendRequestsController < ApplicationController
     friend_request = FriendRequest.find_by(id: params[:id])
 
     if friend_request.update(friend_request_params)
-      if friend_request.status = 'accepted'
+      if friend_request.status == 'accepted'
         # add to friendships table
         add_friendships(friend_request)
+        # create a notification to let receiver know friendship is added
+        notification = send_friendship_notification_to_requestor(friend_request)
       end
       render json: FriendRequestSerializer.new(friend_request).serializable_hash.to_json
     else
@@ -58,6 +60,12 @@ class Api::V1::FriendRequestsController < ApplicationController
     requestor = find_requestor(friend_request)
     receiver = find_receiver(friend_request)
     notification = receiver.notifications.new(text: "#{requestor.name} sent you a friend request!")
+  end
+
+  def send_friendship_notification_to_requestor(friend_request)
+    requestor = find_requestor(friend_request)
+    receiver = find_receiver(friend_request)
+    notification = requestor.notifications.create(text: "#{receiver.name} added you back as a friend!")
   end
 
   def add_friendships(friend_request)
