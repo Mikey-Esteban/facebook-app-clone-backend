@@ -12,9 +12,7 @@ class Api::V1::FriendRequestsController < ApplicationController
   end
 
   def update
-    puts "PARAMS: #{params}"
     friend_request = FriendRequest.find_by(id: params[:friend_request][:id])
-    puts "FR: #{friend_request}"
 
     if friend_request.update(friend_request_params)
       # add to friendships table if status is accepted
@@ -34,7 +32,7 @@ class Api::V1::FriendRequestsController < ApplicationController
   private
 
   def friend_request_params
-    params.require(:friend_request).permit(:id, :requestor_id, :receiver_id, 
+    params.require(:friend_request).permit(:id, :requestor_id, :receiver_id,
       :requestor_name, :receiver_name, :status)
   end
 
