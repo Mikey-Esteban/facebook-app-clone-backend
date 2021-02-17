@@ -65,7 +65,8 @@ class Api::V1::FriendRequestsController < ApplicationController
   def send_friendship_notification_to_requestor(friend_request)
     requestor = find_requestor(friend_request)
     receiver = find_receiver(friend_request)
-    notification = requestor.notifications.create(text: "#{receiver.name} added you back as a friend!")
+    notification = Notification.create(text: "#{receiver.name} added you back as a friend!")
+    requestor.notifications << notification
   end
 
   def add_friendships(friend_request)
