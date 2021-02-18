@@ -13,6 +13,13 @@ class Api::V1::UsersController < ApplicationController
     render json: UserSerializer.new(user, options).serializable_hash.to_json
   end
 
+  def posts
+    user = User.find_by(id: params[:id])
+    posts = user.posts
+
+    render json: PostSerializer.new(posts).serializable_hash.to_json
+  end
+
 
   private
 
