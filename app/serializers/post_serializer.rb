@@ -1,4 +1,4 @@
 class PostSerializer
   include JSONAPI::Serializer
-  attributes :text, :user_id
+  attributes :text, :user_id, :likes
 end

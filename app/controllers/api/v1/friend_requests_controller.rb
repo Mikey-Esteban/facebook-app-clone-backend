@@ -32,9 +32,7 @@ class Api::V1::FriendRequestsController < ApplicationController
   end
 
   def destroy
-    puts "IN RAILS DESTROY"
     friend_request = FriendRequest.find_by(id: params[:id])
-    puts "FRIEND REQEUST #{friend_request}"
 
     if friend_request.destroy
       head :no_content
