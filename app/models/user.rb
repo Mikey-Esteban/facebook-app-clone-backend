@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   has_many :posts, dependent: :destroy
+  has_many :likes, dependent: :destroy
 
   has_many :notifications, dependent: :destroy
 
