@@ -1,5 +1,6 @@
 class Api::V1::FriendRequestsController < ApplicationController
-  before_action :authenticate_user!, :find_requestor, :find_receiver
+  before_action :authenticate_user!
+  before_action :find_requestor, :find_receiver, except: :destroy
 
   def create
     friend_request = FriendRequest.new(friend_request_params)
@@ -31,7 +32,9 @@ class Api::V1::FriendRequestsController < ApplicationController
   end
 
   def destroy
+    puts "IN RAILS DESTROY"
     friend_request = FriendRequest.find_by(id: params[:id])
+    puts "FRIEND REQEUST #{friend_request}"
 
     if friend_request.destroy
       head :no_content

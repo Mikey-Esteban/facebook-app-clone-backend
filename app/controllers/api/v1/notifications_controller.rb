@@ -25,7 +25,7 @@ class Api::V1::NotificationsController < ApplicationController
   private
 
   def notification_params
-    params.require(:notification).permit(:text, :read)
+    params.require(:notification).permit(:id, :user_id, :text, :read)
   end
 
 end
