@@ -3,9 +3,13 @@ class Api::V1::LikesController < ApplicationController
   before_action :find_like, only: :destroy
 
   def create
-    @post.likes.create(user_id: current_user.id)
+    like = @post.likes.build(user_id: current_user.id)
 
-    render json: { message: "#{current_user.name} liked this post" }
+    if like.save
+      render json: LikeSerializer.new(like).serializable_hash.to_json
+    else
+      render json: { errors: like.errors.messages }, status: 422
+    end
   end
 
   def destroy
