@@ -15,11 +15,10 @@ class Api::V1::UsersController < ApplicationController
 
   def posts
     user = User.find_by(id: params[:id])
-    posts = user.posts
+    posts = user.posts.order(created_at: :desc)
 
     render json: PostSerializer.new(posts).serializable_hash.to_json
   end
-
 
   private
 
