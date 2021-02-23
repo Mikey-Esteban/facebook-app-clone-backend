@@ -2,6 +2,10 @@ require 'rest-client'
 
 User.destroy_all
 
+female_collection = Unsplash::Collection.find("42582960")
+female_photos_collection = female_collection.photos
+male_collection = Unsplash::Collection.find("69656559")
+male_photos_collection = male_collection.photos
 
 users = []
 users_image_urls = []
@@ -16,12 +20,11 @@ users_image_urls = []
     password: 'password'
   })
 
-  users_image_urls << result['picture']['medium']
   users << user
 end
 
 5.times do |i|
-  resp = RestClient.get "https://randomuser.me/api/?gender=female"
+  resp = RestClient.get "https://randomuser.me/api/?gender=male"
   obj = JSON.parse(resp)
   result = obj['results'][0]
 
@@ -31,16 +34,24 @@ end
     password: 'password'
   })
 
-  users_image_urls << result['picture']['medium']
   users << user
 end
 
-users_image_urls.each_with_index do |image_url, index|
-  user = users[index]
-  puts user
+female_photos_collection.each_with_index do |photo, i|
+  puts photo
+  user = users[i]
   profile = Profile.create({
     bio: '[insert bio here]',
-    image_url: image_url,
+    image_url: photo['urls']['small'],
+    user_id: user.id
+  })
+end
+
+male_photos_collection.each_with_index do |photo, i|
+  user = users[i+5]
+  profile = Profile.create({
+    bio: '[insert bio here]',
+    image_url: photo['urls']['small'],
     user_id: user.id
   })
 end

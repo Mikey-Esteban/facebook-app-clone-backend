@@ -20,6 +20,8 @@ gem 'devise'
 gem 'devise-jwt'
 # api calls
 gem 'rest-client'
+# unsplash
+gem 'unsplash'
 # faker for seeding
 gem 'faker', :git => 'https://github.com/faker-ruby/faker.git', :branch => 'master'
 # rack cors for middleware
