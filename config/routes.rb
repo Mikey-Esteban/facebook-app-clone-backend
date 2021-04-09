@@ -7,11 +7,13 @@ Rails.application.routes.draw do
   },
   controllers: {
     sessions: 'users/sessions',
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    omniauth_callbacks: 'users/omniauth_callbacks'
   }
 
   namespace :api do
     namespace :v1 do
+      post 'auth/request', to:'users#google_oauth2'
       resources :users, only: [:index, :show] do
         resources :notifications, only: [:update, :destroy]
         member do
@@ -25,4 +27,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+
 end

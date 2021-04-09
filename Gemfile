@@ -15,7 +15,11 @@ gem 'jsonapi-serializer'
 # Figaro for ENV variables
 gem "figaro"
 # authentication
-gem 'devise'
+gem 'devise', github: 'heartcombo/devise', branch: 'ca-omniauth-2'
+# omniauth
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+gem 'activerecord-session_store'
 # for jwt token
 gem 'devise-jwt'
 # api calls
